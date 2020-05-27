@@ -298,6 +298,8 @@ class KubeSpawner(Spawner):
         When set to `None` (the default), no service account is mounted, and the default service account
         is explicitly disabled.
 
+        `{username}` is expanded to the escaped, dns-label safe username.
+
         This `serviceaccount` must already exist in the namespace the user pod is being spawned in.
 
         WARNING: Be careful with this configuration! Make sure the service account being mounted
@@ -1174,7 +1176,7 @@ class KubeSpawner(Spawner):
         config=True,
         help="""
         Time in seconds for the pod to be in `terminating` state before is forcefully killed.
-        
+
         Increase this if you need more time to execute a `preStop` lifecycle hook.
 
         See https://kubernetes.io/docs/concepts/workloads/pods/pod/#termination-of-pods for
@@ -1421,7 +1423,11 @@ class KubeSpawner(Spawner):
             extra_resource_guarantees=self.extra_resource_guarantees,
             lifecycle_hooks=self.lifecycle_hooks,
             init_containers=self._expand_all(self.init_containers),
-            service_account=self.service_account,
+            service_account=self.service_account.format(
+                userid=self.user.id,
+                username=self.user.name,
+                servername=self.name
+            ),
             extra_container_config=self.extra_container_config,
             extra_pod_config=self._expand_all(self.extra_pod_config),
             extra_containers=self._expand_all(self.extra_containers),
