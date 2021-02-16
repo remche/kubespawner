@@ -744,12 +744,13 @@ def make_ingress(name, ingress, routespec, target, labels, data):
             ),
         )
     else:
+        ns = os.environ.get("POD_NAMESPACE", "default")
         service = V1Service(
             kind='Service',
             metadata=meta,
             spec=V1ServiceSpec(
                 type='ExternalName',
-                external_name=target_ip,
+                external_name=f"{target_ip}.{ns}",
                 cluster_ip='',
                 ports=[V1ServicePort(port=target_port, target_port=target_port)],
             ),
