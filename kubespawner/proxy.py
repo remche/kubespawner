@@ -12,12 +12,12 @@ from tornado.concurrent import run_on_executor
 from traitlets import Unicode
 
 from .clients import shared_client
-from kubespawner.objects import make_ingress
-from kubespawner.reflector import NamespacedResourceReflector
-from kubespawner.utils import generate_hashed_slug
+from .objects import make_ingress
+from .reflector import ResourceReflector
+from .utils import generate_hashed_slug
 
 
-class IngressReflector(NamespacedResourceReflector):
+class IngressReflector(ResourceReflector):
     kind = 'ingresses'
     list_method_name = 'list_namespaced_ingress'
     api_group_name = 'ExtensionsV1beta1Api'
@@ -27,7 +27,7 @@ class IngressReflector(NamespacedResourceReflector):
         return self.resources
 
 
-class ServiceReflector(NamespacedResourceReflector):
+class ServiceReflector(ResourceReflector):
     kind = 'services'
     list_method_name = 'list_namespaced_service'
 
@@ -36,7 +36,7 @@ class ServiceReflector(NamespacedResourceReflector):
         return self.resources
 
 
-class EndpointsReflector(NamespacedResourceReflector):
+class EndpointsReflector(ResourceReflector):
     kind = 'endpoints'
     list_method_name = 'list_namespaced_endpoints'
 
